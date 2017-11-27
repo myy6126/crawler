@@ -19,7 +19,7 @@
         <constructor-arg ref="crawlConfig"/>
     </bean>
 
-    <bean id="exceptionTranslator" class="com.nestia.crawler.dao.ExceptionTranslator"/>
+    <bean id="exceptionTranslator" class="com.myy.crawler.dao.ExceptionTranslator"/>
 
     <!-- Invoking an internal, package-private constructor for the example
          Implement your own Configuration for more reliable behaviour -->
