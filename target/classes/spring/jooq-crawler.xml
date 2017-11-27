@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="crawlTransactionAwareDataSource"
+          class="org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy">
+        <constructor-arg ref="crawlDataSource"/>
+    </bean>
+    <!-- Configure jOOQ's ConnectionProvider to use Spring's TransactionAwareDataSourceProxy,
+        which can dynamically discover the transaction context -->
+
+    <bean class="org.jooq.impl.DataSourceConnectionProvider" id="crawlConnectionProvider">
+        <constructor-arg ref="crawlTransactionAwareDataSource"/>
+    </bean>
+
+    <!-- Configure the DSL object, optionally overriding jOOQ Exceptions with Spring Exceptions -->
+    <bean id="crawlDsl" class="org.jooq.impl.DefaultDSLContext">
+        <constructor-arg ref="crawlConfig"/>
+    </bean>
+
+    <bean id="exceptionTranslator" class="com.nestia.crawler.dao.ExceptionTranslator"/>
+
+    <!-- Invoking an internal, package-private constructor for the example
+         Implement your own Configuration for more reliable behaviour -->
+    <bean class="org.jooq.impl.DefaultConfiguration" id="crawlConfig">
+        <property name="SQLDialect">
+            <value type="org.jooq.SQLDialect">MYSQL</value>
+        </property>
+        <property name="connectionProvider" ref="crawlConnectionProvider"/>
+        <property name="executeListenerProvider">
+            <array>
+                <bean class="org.jooq.impl.DefaultExecuteListenerProvider">
+                    <constructor-arg index="0" ref="exceptionTranslator"/>
+                </bean>
+            </array>
+        </property>
+    </bean>
+
+
+</beans>
