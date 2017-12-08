@@ -9,7 +9,7 @@ public abstract class CachedClassLoader extends ClassLoader {
     public CachedClassLoader(String codebase) {
         super();
         this.codebase = codebase;
-        this.cache = new HashMap<>();
+        this.cache = new HashMap();
     }
 
     /**

@@ -31,7 +31,7 @@ public class TClassLoaderFactory {
     public Properties conf = new Properties();
 
     private TClassLoaderFactory() {
-        this.loaderMap = new ConcurrentHashMap<>();
+        this.loaderMap = new ConcurrentHashMap();
         InputStream in = FileClassLoader.class.getResourceAsStream("/wrapperUtil.properties");
         try {
             conf.load(in);
